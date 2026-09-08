@@ -115,3 +115,25 @@ h1 span, h2 em { color: #99a5ae; font-style: normal; }
 .project-flow-link { display: inline-flex; align-items: center; gap: 7px; margin-top: 16px; padding: 0; border: 0; background: transparent; color: #cfa8ff; font-family: "IBM Plex Mono", monospace; font-size: 10px; }.project-flow-link:hover { color: #fff; }
 @media (max-width: 900px) { .verification-callout { margin-left: 0; }.verification-layout { grid-template-columns: 1fr; }.verification-rail { display: grid; grid-template-columns: repeat(2, 1fr); }.verification-detail { min-height: 245px; } }
 @media (max-width: 650px) { .verification-rail { grid-template-columns: 1fr; }.verification-detail { padding: 30px 24px; }.verification-detail h3 { font-size: 31px; }.verification-chain { justify-content: flex-start; gap: 7px; line-height: 1.8; }.verification-chain i { display: none; }.verification-callout { padding: 14px; } }
+
+/* Recruiter-readiness and physically linked engineering-loop controls */
+.topbar { position: fixed; top: 0; padding: 0 18px; border-bottom: 1px solid rgba(145,169,184,.08); background: rgba(8,10,15,.72); backdrop-filter: blur(16px); }
+.hero-seeking { color: #9caab2; }
+.project-proof { max-width: 680px; margin-top: 15px; color: #82919b; font-size: 11px; line-height: 1.5; }
+.project-proof > span { color: #aab8bf; font-family: "IBM Plex Mono", monospace; font-size: 9px; letter-spacing: .03em; }
+.project-proof ul { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 8px 0 0; padding: 0; list-style: none; }
+.project-proof li { position: relative; padding-left: 10px; }.project-proof li::before { content: ""; position: absolute; top: .55em; left: 0; width: 4px; height: 4px; border-radius: 50%; background: #6de7f8; }
+.project-quick-links { display: flex; gap: 14px; margin-top: 12px; }.project-quick-links a { display: inline-flex; align-items: center; gap: 5px; color: #8feaf3; font-family: "IBM Plex Mono", monospace; font-size: 9px; }.project-quick-links a:hover { color: #fff; }
+.experience-outcomes { display: grid; gap: 6px; margin: 14px 0 0; padding: 0; list-style: none; color: #9caab2; font-size: 12px; }.experience-outcomes li::before { content: "↳"; margin-right: 8px; color: #6de7f8; }
+.workflow-steps { pointer-events: none; inset: 0; width: auto; height: auto; transform: none; animation: none; }
+.workflow-step { position: absolute; z-index: 5; pointer-events: auto; animation-duration: 18s; animation-timing-function: linear; animation-iteration-count: infinite; animation-fill-mode: both; }
+.workflow-step:nth-child(1) { animation-name: workflowPointA; }.workflow-step:nth-child(2) { animation-name: workflowPointB; animation-duration: 24s; }.workflow-step:nth-child(3) { animation-name: workflowPointC; animation-duration: 24s; }.workflow-step:nth-child(4) { animation-name: workflowPointD; animation-duration: 18s; }
+.workflow-step:hover, .workflow-step:focus-visible { animation-play-state: paused; }.hero-stage:hover .orbit, .hero-stage:hover .workflow-step { animation-play-state: paused; }
+.workflow-step.active { transform: none; }.workflow-detail span { font-size: 12px; }
+@keyframes workflowPointA { 0%,100% { left: 24%; top: 51%; } 25% { left: 33%; top: 33%; } 50% { left: 57%; top: 29%; } 75% { left: 68%; top: 53%; } }
+@keyframes workflowPointB { 0%,100% { left: 67%; top: 48%; } 25% { left: 57%; top: 29%; } 50% { left: 34%; top: 34%; } 75% { left: 25%; top: 52%; } }
+@keyframes workflowPointC { 0%,100% { left: 50%; top: 78%; } 25% { left: 27%; top: 55%; } 50% { left: 37%; top: 29%; } 75% { left: 67%; top: 47%; } }
+@keyframes workflowPointD { 0%,100% { left: 74%; top: 55%; } 25% { left: 62%; top: 29%; } 50% { left: 29%; top: 49%; } 75% { left: 48%; top: 77%; } }
+@media (max-width: 900px) { .topbar { width: min(100% - 40px, 700px); }.hero-seeking { display: none; } }
+@media (max-width: 650px) { .topbar { width: calc(100% - 32px); padding: 0; }.project-proof ul { display: grid; }.workflow-step { font-size: 8px; }.workflow-step span { font-size: 10px; }.workflow-detail span { font-size: 12px; } }
+@media (prefers-reduced-motion: reduce) { .workflow-step, .orbit, .hero-orb { animation: none !important; }.workflow-step:nth-child(1) { left: 24%; top: 51%; }.workflow-step:nth-child(2) { left: 67%; top: 48%; }.workflow-step:nth-child(3) { left: 50%; top: 78%; }.workflow-step:nth-child(4) { left: 74%; top: 55%; } }
