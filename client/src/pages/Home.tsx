@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -100,12 +100,57 @@ export default function Home() {
   const [activeProject, setActiveProject] = useState<string | null>(null);
   const [activeWorkflow, setActiveWorkflow] = useState(0);
   const [activeVerification, setActiveVerification] = useState(0);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const orbitRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const nodeRefs = useRef<Array<HTMLSpanElement | null>>([]);
+  const stepRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const filters = ["All", "Full-Stack", "AI/ML", "Security", "Frontend"];
   const visibleProjects = useMemo(() => {
     if (activeFilter === "All") return projects;
     const map: Record<string, string[]> = { "Full-Stack": ["Scribbly", "Akatsuki NetworkGuard", "JobSphere"], "AI/ML": ["Scribbly", "Digit Recognizer ML", "ShadowFox Projects", "AutoAI"], Security: ["Akatsuki NetworkGuard"], Frontend: ["JobSphere", "AutoAI", "Aura Wellness App"] };
     return projects.filter((project) => map[activeFilter]?.includes(project.name));
   }, [activeFilter]);
+
+  useEffect(() => {
+    let frame = 0;
+    let last = performance.now();
+    let elapsed = 0;
+    let paused = false;
+    const stage = stageRef.current;
+    const orbitConfig = [
+      { index: 0, speed: 0.000055, base: 27, axis: "rotateX(67deg)" },
+      { index: 1, speed: -0.000041, base: -34, axis: "rotateX(64deg) rotateY(18deg)" },
+    ];
+    const setPaused = (value: boolean) => { paused = value; last = performance.now(); };
+    stage?.addEventListener("pointerenter", () => setPaused(true));
+    stage?.addEventListener("pointerleave", () => setPaused(false));
+    const tick = (now: number) => {
+      const delta = Math.min(now - last, 40);
+      last = now;
+      if (!paused && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) elapsed += delta;
+      orbitConfig.forEach(({ index, speed, base, axis }) => {
+        const orbit = orbitRefs.current[index];
+        if (orbit) orbit.style.transform = `translate(-50%, -50%) rotate(${base + elapsed * speed}deg) ${axis}`;
+      });
+      const containerRect = stage?.getBoundingClientRect();
+      if (containerRect) {
+        nodeRefs.current.forEach((node, index) => {
+          const button = stepRefs.current[index];
+          if (!node || !button) return;
+          const nodeRect = node.getBoundingClientRect();
+          button.style.left = `${nodeRect.left + nodeRect.width / 2 - containerRect.left}px`;
+          button.style.top = `${nodeRect.top + nodeRect.height / 2 - containerRect.top}px`;
+        });
+      }
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(frame);
+      stage?.removeEventListener("pointerenter", () => setPaused(true));
+      stage?.removeEventListener("pointerleave", () => setPaused(false));
+    };
+  }, []);
 
   return <div className="site-shell">
     <a className="skip-link" href="#main-content">Skip to content</a>
@@ -117,7 +162,7 @@ export default function Home() {
     </header>
 
     <main id="main-content">
-      <section id="top" className="hero-section"><div className="hero-grid" aria-hidden="true" /><div className="hero-orb orb-one" aria-hidden="true" /><div className="hero-orb orb-two" aria-hidden="true" /><div className="hero-content container"><div className="hero-copy"><p className="eyebrow"><span className="eyebrow-line" /> COMPUTER ENGINEERING · PUNE, INDIA</p><h1>I build systems<br /><span>with a point of view.</span></h1><p className="hero-lead">Full-stack engineering, applied ML, and practical digital products — shaped into work that is useful, explainable, and built to ship.</p><div className="hero-actions"><button className="button button-primary" onClick={() => scrollToId("work")}>Explore the work <ArrowDownRight size={17} /></button><a className="button button-quiet" href="/manus-storage/Sagar_Samadder_Master_Resume(2)_58a78d40.pdf" target="_blank" rel="noreferrer">View resume PDF <ArrowUpRight size={16} /></a></div><div className="hero-meta"><span><span className="pulse-dot" /> Available for opportunities</span><span className="meta-divider" /><span>Final year · 2027 batch</span><span className="meta-divider" /><span className="hero-seeking">Seeking software engineering · full-stack · AI/ML roles</span></div></div><div className="hero-stage" aria-label="Abstract 3D orbit representing connected engineering disciplines"><div className="stage-label stage-label-top">/ SYSTEMS IN MOTION</div><div className="orbit orbit-a"><span className="orbit-node node-a" /><span className="orbit-node node-b" /></div><div className="orbit orbit-b"><span className="orbit-node node-c" /><span className="orbit-node node-d" /></div><div className="workflow-core"><div className="core-orbit-label">ENGINEERING LOOP</div><div className="core"><div className="core-inner"><Network size={32} strokeWidth={1.25} /><span>BUILD<br />LOOP</span></div></div><div className="workflow-steps" role="tablist" aria-label="Engineering workflow">{workflowSteps.map((step, index) => <button key={step.label} className={activeWorkflow === index ? "workflow-step active" : "workflow-step"} onClick={() => setActiveWorkflow(index)} role="tab" aria-selected={activeWorkflow === index}>{index + 1}<span>{step.label}</span></button>)}</div><div className="workflow-detail" role="status"><strong>{workflowSteps[activeWorkflow].project}</strong><span>{workflowSteps[activeWorkflow].detail}</span><button onClick={() => scrollToId("work")}>See related work <ArrowUpRight size={13} /></button></div></div><div className="stage-caption"><span className="caption-index">0{activeWorkflow + 1}</span><span>{workflowSteps[activeWorkflow].label} / {workflowSteps[(activeWorkflow + 1) % workflowSteps.length].label}</span></div></div></div><div className="scroll-cue"><span>Scroll to explore</span><span className="scroll-line" /></div></section>
+      <section id="top" className="hero-section"><div className="hero-grid" aria-hidden="true" /><div className="hero-orb orb-one" aria-hidden="true" /><div className="hero-orb orb-two" aria-hidden="true" /><div className="hero-content container"><div className="hero-copy"><p className="eyebrow"><span className="eyebrow-line" /> COMPUTER ENGINEERING · PUNE, INDIA</p><h1>I build systems<br /><span>with a point of view.</span></h1><p className="hero-lead">Full-stack engineering, applied ML, and practical digital products — shaped into work that is useful, explainable, and built to ship.</p><div className="hero-actions"><button className="button button-primary" onClick={() => scrollToId("work")}>Explore the work <ArrowDownRight size={17} /></button><a className="button button-quiet" href="/manus-storage/Sagar_Samadder_Master_Resume(2)_58a78d40.pdf" target="_blank" rel="noreferrer">View resume PDF <ArrowUpRight size={16} /></a></div><div className="hero-meta"><span><span className="pulse-dot" /> Available for opportunities</span><span className="meta-divider" /><span>Final year · 2027 batch</span><span className="meta-divider" /><span className="hero-seeking">Seeking software engineering · full-stack · AI/ML roles</span></div></div><div ref={stageRef} className="hero-stage" aria-label="Abstract 3D orbit representing connected engineering disciplines"><div className="stage-label stage-label-top">/ SYSTEMS IN MOTION</div><div ref={(el) => { orbitRefs.current[0] = el; }} className="orbit orbit-a"><span ref={(el) => { nodeRefs.current[0] = el; }} className="orbit-node node-a" /><span ref={(el) => { nodeRefs.current[1] = el; }} className="orbit-node node-b" /></div><div ref={(el) => { orbitRefs.current[1] = el; }} className="orbit orbit-b"><span ref={(el) => { nodeRefs.current[2] = el; }} className="orbit-node node-c" /><span ref={(el) => { nodeRefs.current[3] = el; }} className="orbit-node node-d" /></div><div className="workflow-core"><div className="core-orbit-label">ENGINEERING LOOP</div><div className="core"><div className="core-inner"><Network size={32} strokeWidth={1.25} /><span>BUILD<br />LOOP</span></div></div><div className="workflow-steps" role="tablist" aria-label="Engineering workflow">{workflowSteps.map((step, index) => <button ref={(el) => { stepRefs.current[index] = el; }} key={step.label} className={activeWorkflow === index ? "workflow-step active" : "workflow-step"} onClick={() => setActiveWorkflow(index)} role="tab" aria-selected={activeWorkflow === index}>{index + 1}<span>{step.label}</span></button>)}</div><div className="workflow-detail" role="status"><strong>{workflowSteps[activeWorkflow].project}</strong><span>{workflowSteps[activeWorkflow].detail}</span><button onClick={() => scrollToId("work")}>See related work <ArrowUpRight size={13} /></button></div></div><div className="stage-caption"><span className="caption-index">0{activeWorkflow + 1}</span><span>{workflowSteps[activeWorkflow].label} / {workflowSteps[(activeWorkflow + 1) % workflowSteps.length].label}</span></div></div></div><div className="scroll-cue"><span>Scroll to explore</span><span className="scroll-line" /></div></section>
 
       <section className="signal-strip" aria-label="Portfolio summary"><div className="container signal-inner"><div><span className="signal-value">07</span><span className="signal-label">featured builds</span></div><div><span className="signal-value">03</span><span className="signal-label">internship tracks</span></div><div><span className="signal-value">99%+</span><span className="signal-label">MNIST accuracy</span></div><div><span className="signal-value">∞</span><span className="signal-label">curiosity in practice</span></div></div></section>
 

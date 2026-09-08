@@ -137,3 +137,9 @@ h1 span, h2 em { color: #99a5ae; font-style: normal; }
 @media (max-width: 900px) { .topbar { width: min(100% - 40px, 700px); }.hero-seeking { display: none; } }
 @media (max-width: 650px) { .topbar { width: calc(100% - 32px); padding: 0; }.project-proof ul { display: grid; }.workflow-step { font-size: 8px; }.workflow-step span { font-size: 10px; }.workflow-detail span { font-size: 12px; } }
 @media (prefers-reduced-motion: reduce) { .workflow-step, .orbit, .hero-orb { animation: none !important; }.workflow-step:nth-child(1) { left: 24%; top: 51%; }.workflow-step:nth-child(2) { left: 67%; top: 48%; }.workflow-step:nth-child(3) { left: 50%; top: 78%; }.workflow-step:nth-child(4) { left: 74%; top: 55%; } }
+
+/* Shared orbit controller owns all Engineering Loop motion; no independent timelines. */
+.orbit { animation: none !important; }
+.workflow-step { animation: none !important; transform: translate(-50%, -50%) !important; transition: color .18s ease, filter .18s ease; }
+.workflow-step:hover, .workflow-step:focus-visible, .workflow-step.active { transform: translate(-50%, -50%) !important; }
+@media (prefers-reduced-motion: reduce) { .workflow-step { transition: none; } }
