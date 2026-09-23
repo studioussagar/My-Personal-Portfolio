@@ -47,6 +47,7 @@ button { color: inherit; font: inherit; }
 .brand { display: flex; align-items: center; gap: 11px; font-family: "Space Grotesk", sans-serif; font-size: 18px; font-weight: 700; letter-spacing: -.04em; }
 .brand-mark { display: grid; place-items: center; width: 31px; height: 31px; border: 1px solid rgba(109,231,248,.5); border-radius: 50%; color: #6de7f8; box-shadow: 0 0 22px rgba(109,231,248,.15); }
 .brand-dot { color: #c28dff; }
+.brand-logo { width: 32px; height: 32px; object-fit: contain; display: block; filter: drop-shadow(0 0 10px rgba(109,231,248,.18)); }
 .nav-links { display: flex; gap: 34px; margin-left: auto; margin-right: 40px; color: #8e99a4; }
 .nav-links a, .top-contact, .footer-links a, .text-link { transition: color var(--duration-fast) var(--ease-base), transform .18s ease; }
 .nav-links a:hover, .top-contact:hover, .footer-links a:hover, .text-link:hover { color: #6de7f8; }

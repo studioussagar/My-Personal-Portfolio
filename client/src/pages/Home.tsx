@@ -331,7 +331,7 @@ export default function Home() {
       {TELEMETRY_TRACES.map((t, i) => <span key={`t${i}`} className="tm-trace" style={{ left: `${t.x}%`, top: `${t.y}%`, width: t.w, transform: `rotate(${t.r}deg)`, animationDelay: t.delay }} />)}
     </div>
     <header ref={headerRef} className="topbar">
-      <a className="brand" href="#top" aria-label="Sagar Samadder home"><span className="brand-mark"><CircleDot size={16} /></span><span>SS<span className="brand-dot">.</span></span></a>
+      <a className="brand" href="#top" aria-label="Sagar Samadder home"><img className="brand-logo" src="/logo.png" alt="" width={32} height={32} decoding="async" /><span>Sagar<span className="brand-dot">.</span></span></a>
       <nav className="nav-cluster" aria-label="Primary navigation">
         <span ref={(el) => { slotRefs.current[0] = el; }} className="nav-slot">Work</span>
         <span ref={(el) => { slotRefs.current[1] = el; }} className="nav-slot">Profile</span>
