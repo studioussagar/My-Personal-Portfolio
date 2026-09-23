@@ -167,6 +167,31 @@ export default function Home() {
   }, [activeGraph]);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [activeNav, setActiveNav] = useState<OrbitNavId>("home");
+  // Ambient telemetry field: fixed decorative layer (see .telemetry CSS).
+  // Hand-placed and deterministic — identical on every load. CSS motion only.
+  const TELEMETRY_DOTS = [
+    { x: 4, y: 12, tone: "tm-c", size: "tm-s2", drift: "tm-drift-a", delay: "0s", dur: "34s" },
+    { x: 11, y: 68, tone: "tm-v", size: "tm-s2", drift: "tm-pulse", delay: "1.2s", dur: "5.5s" },
+    { x: 18, y: 32, tone: "tm-c", size: "tm-s3", drift: "tm-drift-b", delay: "3s", dur: "27s" },
+    { x: 26, y: 84, tone: "tm-a", size: "tm-s2", drift: "tm-drift-a", delay: "6s", dur: "38s" },
+    { x: 33, y: 8, tone: "tm-v", size: "tm-s2", drift: "tm-drift-b", delay: "2s", dur: "30s" },
+    { x: 41, y: 55, tone: "tm-c", size: "tm-s2", drift: "tm-pulse", delay: "2.4s", dur: "6.5s" },
+    { x: 47, y: 22, tone: "tm-g", size: "tm-s2", drift: "tm-drift-a", delay: "9s", dur: "31s" },
+    { x: 55, y: 76, tone: "tm-v", size: "tm-s3", drift: "tm-drift-b", delay: "1s", dur: "36s" },
+    { x: 60, y: 40, tone: "tm-c", size: "tm-s2", drift: "tm-drift-a", delay: "12s", dur: "29s" },
+    { x: 66, y: 90, tone: "tm-a", size: "tm-s2", drift: "tm-pulse", delay: "0.6s", dur: "7.5s" },
+    { x: 72, y: 15, tone: "tm-v", size: "tm-s2", drift: "tm-drift-b", delay: "7s", dur: "33s" },
+    { x: 78, y: 58, tone: "tm-c", size: "tm-s3", drift: "tm-drift-a", delay: "4s", dur: "37s" },
+    { x: 85, y: 30, tone: "tm-g", size: "tm-s2", drift: "tm-pulse", delay: "3.1s", dur: "6s" },
+    { x: 90, y: 72, tone: "tm-v", size: "tm-s2", drift: "tm-drift-a", delay: "10s", dur: "26s" },
+    { x: 94, y: 48, tone: "tm-c", size: "tm-s2", drift: "tm-drift-b", delay: "5s", dur: "39s" },
+    { x: 8, y: 45, tone: "tm-a", size: "tm-s2", drift: "tm-pulse", delay: "4.4s", dur: "8s" },
+  ];
+  const TELEMETRY_TRACES = [
+    { x: 22, y: 40, w: 150, r: 24, delay: "0s" },
+    { x: 63, y: 64, w: 180, r: -18, delay: "4s" },
+    { x: 80, y: 22, w: 130, r: 40, delay: "8s" },
+  ];
   const filters = ["All", "Full-Stack", "AI/ML", "Security", "Frontend"];
   const visibleProjects = useMemo(() => {
     if (activeFilter === "All") return projects;
@@ -244,7 +269,7 @@ export default function Home() {
     const done = () => {
       setSheetProject(null);
       setSheetClosing(false);
-      openerRef.current?.focus();
+      openerRef.current?.focus({ preventScroll: true });
     };
     if (prefersReducedMotion) {
       done();
@@ -269,7 +294,7 @@ export default function Home() {
     };
   }, [sheetProject]);
   useEffect(() => {
-    if (sheetProject && !sheetClosing) sheetCloseRef.current?.focus();
+    if (sheetProject && !sheetClosing) sheetCloseRef.current?.focus({ preventScroll: true });
   }, [sheetProject, sheetClosing]);
   useEffect(() => () => window.clearTimeout(closeTimer.current), []);
   const onSheetKeyDown = (e: React.KeyboardEvent) => {
@@ -301,6 +326,10 @@ export default function Home() {
 
   return <div className="site-shell">
     <a className="skip-link" href="#main-content">Skip to content</a>
+    <div className="telemetry" aria-hidden="true">
+      {TELEMETRY_DOTS.map((d, i) => <span key={i} className={`tm-dot ${d.tone} ${d.size} ${d.drift}`} style={{ left: `${d.x}%`, top: `${d.y}%`, animationDelay: d.delay, animationDuration: d.dur }} />)}
+      {TELEMETRY_TRACES.map((t, i) => <span key={`t${i}`} className="tm-trace" style={{ left: `${t.x}%`, top: `${t.y}%`, width: t.w, transform: `rotate(${t.r}deg)`, animationDelay: t.delay }} />)}
+    </div>
     <header ref={headerRef} className="topbar">
       <a className="brand" href="#top" aria-label="Sagar Samadder home"><span className="brand-mark"><CircleDot size={16} /></span><span>SS<span className="brand-dot">.</span></span></a>
       <nav className="nav-cluster" aria-label="Primary navigation">
